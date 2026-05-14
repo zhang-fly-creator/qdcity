@@ -84,11 +84,15 @@ export function ModelViewer({ model }: Props) {
       <div className="overlay-heading">
         <h2 className="overlay-title">{model.name}</h2>
         <p className="overlay-sub">{model.subtitle}</p>
+        <span className="overlay-status-pill">
+          {model.modelStatus === 'ready' ? '已建模' : '演示模型'}
+        </span>
+        <p className="overlay-mini-tip">拖拽旋转 · 滚轮缩放 · 右键平移 · 自动旋转</p>
       </div>
 
       {/* 浮层提示（弱化为左下角的灰色细字） */}
       <p className="overlay-tip" aria-hidden="true">
-        拖拽旋转 · 滚轮缩放 · 右键平移
+        点击右侧 AI 时光伴游，进入 1 分钟建筑故事
       </p>
 
       {/* 浮层工具栏（底部居中） */}

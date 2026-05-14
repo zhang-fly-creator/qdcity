@@ -1,5 +1,6 @@
 import type { CellModel } from '../data/models';
 import { useModel } from '../hooks/useModel';
+import { BuildingImage } from './BuildingImage';
 
 interface Props {
   models: CellModel[];
@@ -13,7 +14,7 @@ export function Sidebar({ models, activeId, onSelect }: Props) {
       <div className="sidebar-section">
         <header className="sidebar-header">
           <span className="dot" />
-          细 胞 类 型
+          建 筑 目 录
         </header>
         <ul className="cell-list">
           {models.map((m) => (
@@ -47,6 +48,7 @@ function CellItem({
   const downloaded = status === 'done';
   const downloading = status === 'downloading' || status === 'parsing';
   const queued = status === 'idle';
+  const modelStatusLabel = model.modelStatus === 'ready' ? '已建模' : '演示模型';
   const percent = Math.round(progress * 100);
 
   return (
@@ -58,8 +60,8 @@ function CellItem({
         style={{ '--accent': model.accent } as React.CSSProperties}
       >
         <div className="cell-thumb">
-          <img src={model.imageUrl} alt={model.name} loading="lazy" />
-          {active && <span className="badge">当前</span>}
+          <BuildingImage model={model} compact />
+          {active && <span className="badge">当前建筑</span>}
         </div>
         <div className="cell-meta">
           <div className="cell-name">{model.name}</div>
@@ -67,7 +69,7 @@ function CellItem({
           <div className="cell-status">
             {downloaded && (
               <span className="status-chip ok">
-                <Check /> 已就绪
+                <Check /> {modelStatusLabel}
               </span>
             )}
             {downloading && (
@@ -78,7 +80,7 @@ function CellItem({
                 {percent}%
               </span>
             )}
-            {queued && <span className="status-chip idle">排队中</span>}
+            {queued && <span className="status-chip idle">{modelStatusLabel}</span>}
           </div>
         </div>
       </button>

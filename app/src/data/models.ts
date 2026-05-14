@@ -15,170 +15,346 @@ export interface CellModel {
     habitat: string;
   };
   modelUrl: string;
+  futureModelUrl: string;
+  placeholderModelUrl: string;
+  modelStatus: 'placeholder' | 'ready';
   imageUrl: string;
-  /** 经过 Draco 压缩后的真实文件大小（字节），用于估算下载进度 */
+  imageStatus: 'placeholder' | 'ready';
+  /** Draco-compressed placeholder file size in bytes, used for progress estimation. */
   fileSize: number;
-  /** 默认绕 Y 轴的旋转角度（弧度）；用于让模型呈现合适的视角 */
+  /** Default Y-axis rotation in radians for a comfortable first view. */
   defaultRotationY: number;
-  /** 在统一归一化尺寸基础上的显示倍率，用于让不同模型默认呈现大小不同 */
+  /** Extra display scale after model normalization. */
   displayScale: number;
 }
 
 const BASE = import.meta.env.BASE_URL;
 const asset = (p: string) => `${BASE}${p}`.replace(/\/+/g, '/');
 
+const PLACEHOLDER_MODELS = {
+  plant: asset('models/placeholders/plant-cell.glb'),
+  animal: asset('models/placeholders/animal-cell.glb'),
+  white: asset('models/placeholders/white-blood-cell.glb'),
+  neuron: asset('models/placeholders/neuron.glb'),
+  dna: asset('models/placeholders/dna.glb'),
+};
+
+const BUILDING_IMAGE_BASE = 'images/buildings';
+const QINGDAO_MODEL_BASE = 'models/qingdao';
+
+type ModelSpec = {
+  id: string;
+  name: string;
+  subtitle: string;
+  category: string;
+  description: string;
+  size: string;
+  location: string;
+  visibleInLM: string;
+  accent: string;
+  features: { name: string; detail: string }[];
+  funFact: string;
+  whereText: string;
+  whereHabitat: string;
+  imageFile: string;
+  futureModelFile: string;
+  placeholderModelUrl: string;
+  fileSize: number;
+  defaultRotationY: number;
+  displayScale: number;
+};
+
+function createModel(spec: ModelSpec): CellModel {
+  const futureModelUrl = asset(`${QINGDAO_MODEL_BASE}/${spec.futureModelFile}`);
+  return {
+    id: spec.id,
+    name: spec.name,
+    subtitle: spec.subtitle,
+    category: spec.category,
+    description: spec.description,
+    size: spec.size,
+    location: spec.location,
+    visibleInLM: spec.visibleInLM,
+    accent: spec.accent,
+    features: spec.features,
+    funFact: spec.funFact,
+    whereItOccurs: {
+      text: spec.whereText,
+      habitat: spec.whereHabitat,
+    },
+    modelUrl: futureModelUrl,
+    futureModelUrl,
+    placeholderModelUrl: spec.placeholderModelUrl,
+    modelStatus: 'ready',
+    imageUrl: asset(`${BUILDING_IMAGE_BASE}/${spec.imageFile}`),
+    imageStatus: 'placeholder',
+    fileSize: spec.fileSize,
+    defaultRotationY: spec.defaultRotationY,
+    displayScale: spec.displayScale,
+  };
+}
+
 export const MODELS: CellModel[] = [
-  {
-    id: 'plant-cell',
-    name: '植物细胞',
-    subtitle: '真核细胞 · 自养生物',
-    category: '真核细胞',
-    accent: '#7fb069',
+  createModel({
+    id: 'governor-residence',
+    name: '德国总督楼旧址',
+    subtitle: '德式官邸 · 青岛近代城市记忆',
+    category: '德式官邸',
     description:
-      '植物细胞是构成植物体的基本单位。与动物细胞不同，它拥有坚硬的细胞壁、能进行光合作用的叶绿体，以及储存营养与水分的大型液泡，使其既能保持形态又能为整个生态系统提供能量。',
-    size: '10 – 100 微米',
-    location: '植物的根、茎、叶、花、果实',
-    visibleInLM: '是',
+      '这座建筑是青岛近代城市记忆中的重要地标，承载着德式官邸建筑、山地城市空间与青岛老城风貌的多重信息。原始用途为德国胶澳总督官邸。',
+    size: '1903—1907',
+    location: '青岛市市南区龙山路一带',
+    visibleInLM: '历史建筑 / 城市文化地标',
+    accent: '#2f7f8f',
     features: [
-      { name: '细胞壁', detail: '由纤维素构成，提供形态支撑与机械保护' },
-      { name: '叶绿体', detail: '光合作用场所，将光能转化为有机物' },
-      { name: '大液泡', detail: '储存水分、糖、色素，维持膨压' },
-      { name: '细胞核', detail: '储存遗传信息，调控代谢与分裂' },
-      { name: '线粒体', detail: '细胞的能量工厂，进行有氧呼吸' },
-      { name: '内质网与高尔基体', detail: '蛋白质合成、加工与运输' },
+      { name: '德式城堡式官邸建筑风格明显', detail: '体量、屋顶和立面共同形成庄重的官邸气质。' },
+      { name: '依山势布局，具有强烈的空间层次', detail: '建筑与坡地、视线和入口组织紧密相关。' },
+      { name: '红瓦、石墙、坡屋顶构成青岛老城经典视觉', detail: '这些元素共同塑造了青岛老城最具识别度的风貌。' },
     ],
-    funFact:
-      '一片成熟叶子里可能含有数百万个叶绿体，它们让地球的每一次呼吸都变得甘甜。',
-    whereItOccurs: {
-      text: '从苔藓到参天大树，植物细胞无处不在地构筑着大地的绿色。',
-      habitat: '陆生植物 · 水生藻类 · 蕨类',
-    },
-    modelUrl: asset('models/plant-cell.glb'),
-    imageUrl: asset('images/plant-cell.jpg'),
-    fileSize: 6030628,
+    funFact: '从建筑的高处视角，可以理解青岛老城为什么会形成“山、海、城、楼”交织的独特格局。',
+    whereText: '适合与信号山、江苏路基督教堂、德国总督府旧址组成一条老城建筑漫游路线。',
+    whereHabitat: '信号山 · 江苏路基督教堂 · 德国总督府旧址',
+    imageFile: 'governor-house.jpg',
+    futureModelFile: 'governor-house.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.plant,
+    fileSize: 87466056,
+    defaultRotationY: -Math.PI / 5,
+    displayScale: 1.35,
+  }),
+  createModel({
+    id: 'governor-office',
+    name: '青岛德国总督府旧址',
+    subtitle: '近代行政建筑 · 城市治理记忆',
+    category: '行政建筑',
+    description:
+      '这座建筑见证了青岛近代城市治理体系和城市规划的形成，是理解青岛老城行政空间的重要入口。原始用途为德国胶澳行政办公建筑。',
+    size: '1900 年代',
+    location: '青岛市市南区老城片区',
+    visibleInLM: '历史建筑 / 城市记忆节点',
+    accent: '#8f3f2f',
+    features: [
+      { name: '建筑形态庄重，体现近代行政建筑气质', detail: '稳定的比例和公共尺度传达行政空间的秩序感。' },
+      { name: '与周边道路、广场和山地空间关系密切', detail: '建筑不是孤立对象，而是老城空间组织的一部分。' },
+      { name: '是青岛近代城市格局的重要组成部分', detail: '它帮助理解早期城市治理和街区规划的形成。' },
+    ],
+    funFact: '看这类行政建筑，不只是看外观，更是在看一座城市早期秩序如何被设计出来。',
+    whereText: '适合与德国总督楼旧址、江苏路基督教堂、老舍故居联动讲解。',
+    whereHabitat: '德国总督楼旧址 · 江苏路基督教堂 · 老舍故居',
+    imageFile: 'governor-office.jpg',
+    futureModelFile: 'governor-office.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.animal,
+    fileSize: 87466056,
     defaultRotationY: -Math.PI / 4,
-    displayScale: 1.4,
-  },
-  {
-    id: 'animal-cell',
-    name: '动物细胞',
-    subtitle: '真核细胞 · 异养生物',
-    category: '真核细胞',
-    accent: '#e8859a',
+    displayScale: 1.35,
+  }),
+  createModel({
+    id: 'jiangsu-road-church',
+    name: '江苏路基督教堂',
+    subtitle: '钟楼与红瓦 · 老城精神地标',
+    category: '宗教建筑',
     description:
-      '动物细胞缺少细胞壁和叶绿体，依赖灵活的细胞膜与丰富的细胞器协作完成代谢与运动。从你正在跳动的心肌细胞到大脑皮层中的胶质细胞，它们以惊人的多样性塑造着复杂的生命体。',
-    size: '10 – 30 微米',
-    location: '所有动物的组织与器官',
-    visibleInLM: '是',
+      '江苏路基督教堂以红瓦屋顶、钟楼和老城街巷关系成为青岛历史城区的重要视觉符号。原始用途为基督教堂。',
+    size: '1910 年代',
+    location: '青岛市市南区江苏路',
+    visibleInLM: '历史建筑 / 宗教文化地标',
+    accent: '#1f6f8b',
     features: [
-      { name: '细胞膜', detail: '磷脂双分子层，选择性地控制物质进出' },
-      { name: '细胞核', detail: '遗传中心，包含 DNA 与核仁' },
-      { name: '线粒体', detail: '产生 ATP，被称为「细胞的电厂」' },
-      { name: '内质网', detail: '粗面合成蛋白质，光面合成脂质' },
-      { name: '高尔基体', detail: '蛋白质的加工与分拣中心' },
-      { name: '溶酶体', detail: '细胞的「回收站」，分解代谢废物' },
+      { name: '钟楼轮廓突出，适合作为老城识别点', detail: '竖向轮廓在坡地街巷中形成清晰方向感。' },
+      { name: '建筑与周边坡路、街巷关系紧密', detail: '步行接近过程本身就是老城体验的一部分。' },
+      { name: '具有鲜明的德式宗教建筑风格', detail: '红瓦屋顶和钟楼形象延续了青岛老城建筑风貌。' },
     ],
-    funFact:
-      '一个成年人体内大约有 37 万亿个细胞——它们每一秒都在协作，构成你正在阅读这段文字的「你」。',
-    whereItOccurs: {
-      text: '从单细胞原生动物到鲸鱼，所有动物的身体都是由动物细胞组成。',
-      habitat: '哺乳动物 · 鱼类 · 昆虫 · 鸟类',
-    },
-    modelUrl: asset('models/animal-cell.glb'),
-    imageUrl: asset('images/animal-cell.jpg'),
-    fileSize: 10673912,
+    funFact: '在青岛老城漫步时，钟楼经常像一个方向标，帮助游客判断自己在老城区中的位置。',
+    whereText: '适合加入老城徒步路线、建筑摄影路线和亲子研学路线。',
+    whereHabitat: '老城徒步 · 建筑摄影 · 亲子研学',
+    imageFile: 'jiangsu-church.jpg',
+    futureModelFile: 'jiangsu-church.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.white,
+    fileSize: 87466056,
+    defaultRotationY: -Math.PI / 6,
+    displayScale: 1.45,
+  }),
+  createModel({
+    id: 'st-michael-cathedral',
+    name: '圣弥厄尔教堂',
+    subtitle: '哥特式风格 · 中山路城市记忆',
+    category: '城市地标',
+    description:
+      '圣弥厄尔教堂是青岛极具辨识度的城市地标之一，双塔形象和周边街区共同构成老城记忆。原始用途为天主教堂。',
+    size: '1930 年代',
+    location: '青岛市市南区浙江路',
+    visibleInLM: '历史建筑 / 城市地标',
+    accent: '#b0523d',
+    features: [
+      { name: '双塔立面具有强烈视觉识别度', detail: '高耸塔身让建筑成为老城天际线中的醒目节点。' },
+      { name: '与中山路、浙江路等老城街区关系密切', detail: '宗教建筑与商业街区共同构成游客的老城印象。' },
+      { name: '是青岛婚纱摄影和城市漫游的重要点位', detail: '建筑形象已经进入青岛城市影像和旅行记忆。' },
+    ],
+    funFact: '很多游客对青岛老城的第一印象，并不是某条街，而是教堂尖塔与红瓦屋顶共同构成的天际线。',
+    whereText: '适合与中山路、火车站老站房、邮电博物馆组成城市地标路线。',
+    whereHabitat: '中山路 · 火车站老站房 · 邮电博物馆',
+    imageFile: 'st-michael-cathedral.jpg',
+    futureModelFile: 'st-michael-cathedral.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.neuron,
+    fileSize: 87466056,
     defaultRotationY: -Math.PI / 4,
-    displayScale: 1.4,
-  },
-  {
-    id: 'white-blood-cell',
-    name: '白细胞',
-    subtitle: '免疫细胞 · 身体的卫士',
-    category: '免疫细胞',
-    accent: '#c8a2d8',
+    displayScale: 1.55,
+  }),
+  createModel({
+    id: 'qingdao-railway-station',
+    name: '青岛火车站老站房',
+    subtitle: '城市门户 · 百年交通记忆',
+    category: '交通地标',
     description:
-      '白细胞是免疫系统的核心成员，巡逻在血液与淋巴中。它们能够识别入侵的病原体，通过吞噬、释放细胞因子或精准杀伤的方式守护机体的稳态。',
-    size: '6 – 20 微米',
-    location: '血液、淋巴系统、骨髓',
-    visibleInLM: '是',
+      '青岛火车站老站房是城市门户型建筑，连接了铁路交通、港口城市和青岛近代城市发展的记忆。原始用途为铁路车站。',
+    size: '1900 年代',
+    location: '青岛市市南区泰安路',
+    visibleInLM: '历史建筑 / 城市交通地标',
+    accent: '#d3a447',
     features: [
-      { name: '不规则的细胞核', detail: '不同亚型呈分叶或马蹄形' },
-      { name: '细胞膜与伪足', detail: '可主动变形，穿越毛细血管壁' },
-      { name: '吞噬泡', detail: '包裹并消化入侵的细菌或异物' },
-      { name: '颗粒体', detail: '储存酶与抗菌肽，释放后清除病原' },
-      { name: '线粒体', detail: '提供免疫反应所需的能量' },
+      { name: '具有鲜明的老站房建筑形象', detail: '站房轮廓与交通功能共同形成强烈的抵达感。' },
+      { name: '是游客进入青岛老城的重要第一站', detail: '从这里出发，很容易进入栈桥、中山路和老城片区。' },
+      { name: '与海岸线、中山路和老城区联系紧密', detail: '交通门户、海滨空间和商业街区在步行尺度内相互连接。' },
     ],
-    funFact:
-      '一个健康成年人每天会生成约 1000 亿个新的白细胞，几乎是地球总人口的十二倍。',
-    whereItOccurs: {
-      text: '每一滴血液里，都游弋着千万个白细胞，全天候巡逻你的身体。',
-      habitat: '血液 · 骨髓 · 脾脏 · 淋巴结',
-    },
-    modelUrl: asset('models/white-blood-cell.glb'),
-    imageUrl: asset('images/white-blood-cell.jpg'),
-    fileSize: 10812336,
-    defaultRotationY: -Math.PI / 4,
-    displayScale: 1.4,
-  },
-  {
-    id: 'neuron',
-    name: '神经元',
-    subtitle: '可兴奋细胞 · 信息传递者',
-    category: '神经细胞',
-    accent: '#f0a868',
-    description:
-      '神经元是信息处理的基本单元。突出的树突像天线一样接收信号，长长的轴突则把电脉冲送往远方。它们用化学和电的语言编织出感知、记忆与思考。',
-    size: '细胞体 4 – 100 微米，轴突可达 1 米',
-    location: '大脑、脊髓、周围神经系统',
-    visibleInLM: '是（须染色）',
-    features: [
-      { name: '细胞体', detail: '包含核与主要细胞器，整合输入信号' },
-      { name: '树突', detail: '分支繁多，接收来自其他神经元的信号' },
-      { name: '轴突', detail: '传导电脉冲，可延伸至身体远端' },
-      { name: '髓鞘', detail: '加快传导速度，由施旺细胞或少突胶质细胞包裹' },
-      { name: '突触', detail: '通过神经递质把信号传递给下一个细胞' },
-    ],
-    funFact:
-      '人脑约有 860 亿个神经元，它们之间的连接数超过银河系恒星总数。',
-    whereItOccurs: {
-      text: '从蝴蝶的复眼到人类的大脑皮层，神经元让动物拥有了感觉与思考的能力。',
-      habitat: '中枢神经系统 · 周围神经 · 感觉器官',
-    },
-    modelUrl: asset('models/neuron.glb'),
-    imageUrl: asset('images/neuron.jpg'),
-    fileSize: 7359744,
-    defaultRotationY: -Math.PI / 4,
-    displayScale: 1.8,
-  },
-  {
-    id: 'dna',
-    name: 'DNA 双螺旋',
-    subtitle: '遗传分子 · 生命的蓝图',
-    category: '生物大分子',
-    accent: '#9cc4e4',
-    description:
-      'DNA 由两条互补的核苷酸链组成，盘旋成优雅的双螺旋。它把生命的指令写成 A、T、G、C 四个字母，让信息得以在亿万年之间一代代地复制、表达与演化。',
-    size: '直径约 2 纳米，长度因物种而异',
-    location: '细胞核、线粒体、叶绿体',
-    visibleInLM: '仅电镜可见',
-    features: [
-      { name: '双螺旋骨架', detail: '由磷酸与脱氧核糖交替连接而成' },
-      { name: '碱基对', detail: 'A 与 T、G 与 C 通过氢键互补配对' },
-      { name: '大沟与小沟', detail: '蛋白质识别 DNA 的关键结构' },
-      { name: '半保留复制', detail: '每一次复制都保留一条母链作模板' },
-    ],
-    funFact:
-      '把一个细胞里的 DNA 拉成直线约有 2 米长；全身细胞的 DNA 接起来可往返太阳数百次。',
-    whereItOccurs: {
-      text: '从最古老的细菌到你身上的每一个细胞，DNA 都在静静守护着生命的密码。',
-      habitat: '细菌 · 古菌 · 真核生物 · 病毒（部分）',
-    },
-    modelUrl: asset('models/dna.glb'),
-    imageUrl: asset('images/dna.jpg'),
-    fileSize: 9977020,
+    funFact: '对很多人来说，青岛的城市记忆是从火车站走向海边的那一刻开始的。',
+    whereText: '适合作为青岛老城漫游路线的起点。',
+    whereHabitat: '泰安路 · 栈桥方向 · 中山路片区',
+    imageFile: 'qingdao-railway-station.jpg',
+    futureModelFile: 'qingdao-railway-station.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.dna,
+    fileSize: 50708336,
     defaultRotationY: 0,
-    displayScale: 1.2,
-  },
+    displayScale: 1.25,
+  }),
+  createModel({
+    id: 'post-museum',
+    name: '青岛邮电博物馆',
+    subtitle: '胶澳邮政 · 城市通信记忆',
+    category: '邮政建筑',
+    description:
+      '青岛邮电博物馆承载着近代邮政、通信和城市信息流动的历史，是理解青岛现代城市功能的重要建筑。原始用途为邮政通信建筑。',
+    size: '1900 年代',
+    location: '青岛市市南区安徽路一带',
+    visibleInLM: '历史建筑 / 博物馆空间',
+    accent: '#2f8f74',
+    features: [
+      { name: '体现近代公共服务建筑特征', detail: '对外服务、后台处理和机构办公功能在建筑中并置。' },
+      { name: '与青岛老城商业街区关系密切', detail: '邮政通信建筑服务于城市商业和居民日常。' },
+      { name: '适合讲述通信、邮政和城市现代化故事', detail: '它让抽象的信息流动变成可参观的城市空间。' },
+    ],
+    funFact: '邮政建筑记录的不只是信件传递，也记录了城市如何与外部世界发生联系。',
+    whereText: '适合与中山路、圣弥厄尔教堂、青岛火车站老站房组合成老城公共建筑路线。',
+    whereHabitat: '中山路 · 圣弥厄尔教堂 · 青岛火车站老站房',
+    imageFile: 'post-museum.jpg',
+    futureModelFile: 'post-museum.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.plant,
+    fileSize: 50708336,
+    defaultRotationY: -Math.PI / 4,
+    displayScale: 1.3,
+  }),
+  createModel({
+    id: 'tsingtao-brewery',
+    name: '青岛啤酒厂旧址',
+    subtitle: '工业文明 · 青岛品牌记忆',
+    category: '工业遗产',
+    description:
+      '青岛啤酒厂旧址是青岛工业文明和城市品牌记忆的重要载体，也是工业遗产转化为文旅体验的代表。原始用途为啤酒生产工厂。',
+    size: '1903 年',
+    location: '青岛市市北区登州路',
+    visibleInLM: '工业遗产 / 博物馆与品牌地标',
+    accent: '#6f7f3a',
+    features: [
+      { name: '红砖工业建筑特征鲜明', detail: '材料和尺度体现近代工业建筑的效率与耐久。' },
+      { name: '连接工业生产、城市品牌和游客体验', detail: '从生产空间转化为品牌文化和文旅空间。' },
+      { name: '是青岛工业遗产活化的重要样本', detail: '展示工业遗产如何进入当代城市生活。' },
+    ],
+    funFact: '一座工厂能够成为城市名片，说明工业建筑也可以变成文化传播的入口。',
+    whereText: '适合与青岛工业遗产、品牌文化、研学体验路线结合。',
+    whereHabitat: '登州路 · 工业遗产 · 品牌文化',
+    imageFile: 'tsingtao-brewery.jpg',
+    futureModelFile: 'tsingtao-brewery.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.animal,
+    fileSize: 50708336,
+    defaultRotationY: -Math.PI / 5,
+    displayScale: 1.35,
+  }),
+  createModel({
+    id: 'laoshe-residence',
+    name: '老舍故居',
+    subtitle: '文学青岛 · 骆驼祥子记忆',
+    category: '名人故居',
+    description:
+      '老舍故居连接着青岛的文学记忆，也让老建筑从空间遗产进一步变成可讲述的人文故事。原始用途为居住建筑。',
+    size: '近代历史建筑',
+    location: '青岛市市南区黄县路一带',
+    visibleInLM: '名人故居 / 文学记忆空间',
+    accent: '#5f4a3d',
+    features: [
+      { name: '建筑尺度亲切，适合人物故事讲解', detail: '故居空间更接近日常生活，便于连接人物和情境。' },
+      { name: '与大学路、黄县路一带文化氛围联系紧密', detail: '街区气质让文学记忆有了可步行的空间背景。' },
+      { name: '适合开展文学主题研学', detail: '可从建筑进入作家、作品和时代心境的讲述。' },
+    ],
+    funFact: '名人故居的价值不只在建筑本身，更在于它曾经承载的写作、生活和时代心境。',
+    whereText: '适合与康有为故居、沈从文相关旧居、大学路片区组成文学青岛路线。',
+    whereHabitat: '康有为故居 · 大学路片区 · 文学青岛',
+    imageFile: 'laoshe-house.jpg',
+    futureModelFile: 'laoshe-house.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.white,
+    fileSize: 50708336,
+    defaultRotationY: -Math.PI / 3,
+    displayScale: 1.4,
+  }),
+  createModel({
+    id: 'kang-youwei-residence',
+    name: '康有为故居',
+    subtitle: '晚年寓居 · 近代思想记忆',
+    category: '名人故居',
+    description:
+      '康有为故居是青岛名人故居体系中的重要一处，连接着近代思想人物、晚年生活和青岛城市文化。原始用途为居住建筑。',
+    size: '近代历史建筑',
+    location: '青岛市市南区福山支路一带',
+    visibleInLM: '名人故居 / 近代思想文化节点',
+    accent: '#7f5732',
+    features: [
+      { name: '具有典型老城居住建筑气质', detail: '尺度、院落和街巷关系共同呈现青岛老城生活场景。' },
+      { name: '适合讲述人物晚年生活和思想影响', detail: '建筑为近代人物故事提供了具体空间。' },
+      { name: '与周边文化街区可形成步行游线', detail: '可串联大学路、信号山和其他名人故居。' },
+    ],
+    funFact: '看名人故居时，可以把建筑理解成一个人的生活现场，而不是一块静态牌匾。',
+    whereText: '适合与老舍故居、大学路文化片区、信号山片区联动讲解。',
+    whereHabitat: '老舍故居 · 大学路文化片区 · 信号山片区',
+    imageFile: 'kang-youwei-house.jpg',
+    futureModelFile: 'kang-youwei-house.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.neuron,
+    fileSize: 87466056,
+    defaultRotationY: -Math.PI / 4,
+    displayScale: 1.5,
+  }),
+  createModel({
+    id: 'huashi-building',
+    name: '花石楼',
+    subtitle: '海滨别墅 · 八大关风貌记忆',
+    category: '八大关建筑',
+    description:
+      '花石楼是八大关区域的代表性建筑之一，体现了青岛海滨别墅、庭院空间和多元建筑风格的融合。原始用途为海滨别墅。',
+    size: '1930 年代',
+    location: '青岛市市南区八大关片区',
+    visibleInLM: '历史建筑 / 八大关代表性建筑',
+    accent: '#b85f4d',
+    features: [
+      { name: '海滨别墅形象鲜明', detail: '建筑体量、材料和观景关系共同强化度假气质。' },
+      { name: '与八大关道路、庭院和海岸风景关系紧密', detail: '建筑体验来自街路、树木、院落和海风的组合。' },
+      { name: '适合展示青岛度假城市和万国建筑风貌', detail: '花石楼是理解八大关多元风格的重要入口。' },
+    ],
+    funFact: '八大关最迷人的地方，不是单栋建筑，而是建筑、树木、道路和海风共同形成的整体氛围。',
+    whereText: '适合做八大关建筑漫游、摄影打卡和亲子研学路线。',
+    whereHabitat: '八大关建筑漫游 · 摄影打卡 · 亲子研学',
+    imageFile: 'huashi-building.jpg',
+    futureModelFile: 'huashi-building.glb',
+    placeholderModelUrl: PLACEHOLDER_MODELS.dna,
+    fileSize: 50708336,
+    defaultRotationY: -Math.PI / 6,
+    displayScale: 1.25,
+  }),
 ];
 
 export const DEFAULT_MODEL_ID = MODELS[0].id;

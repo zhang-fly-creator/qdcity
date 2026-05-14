@@ -8,11 +8,11 @@ interface Props {
 }
 
 const STATUS_TEXT: Record<LoadStatus, string> = {
-  idle: '准备中…',
-  downloading: '正在下载模型…',
-  parsing: '正在解析几何体…',
-  done: '加载完成',
-  error: '加载失败',
+  idle: '正在加载青岛老建筑 3D 模型',
+  downloading: '正在解析城市记忆',
+  parsing: '模型文件较大，请稍候',
+  done: '建筑已入展',
+  error: '模型加载失败',
 };
 
 export function ProgressOverlay({ progress, status, modelName, error }: Props) {
@@ -24,7 +24,7 @@ export function ProgressOverlay({ progress, status, modelName, error }: Props) {
           <CellRing />
         </div>
         <div className="progress-headline">
-          正在为你准备 <strong>{modelName}</strong>
+          正在加载 <strong>{modelName}</strong>
         </div>
         <div className="progress-bar">
           <div
@@ -38,7 +38,7 @@ export function ProgressOverlay({ progress, status, modelName, error }: Props) {
         </div>
         {status === 'error' && (
           <div className="progress-error">
-            {(error as Error | undefined)?.message ?? '请刷新页面再试一次。'}
+            {(error as Error | undefined)?.message ?? '请刷新页面，再次进入这段城市记忆。'}
           </div>
         )}
       </div>
@@ -51,8 +51,9 @@ function CellRing() {
     <svg viewBox="0 0 80 80" width="80" height="80">
       <defs>
         <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#9bcf83" />
-          <stop offset="100%" stopColor="#5c7a8a" />
+          <stop offset="0%" stopColor="#d7b46a" />
+          <stop offset="55%" stopColor="#2f7f8f" />
+          <stop offset="100%" stopColor="#8f3f2f" />
         </linearGradient>
       </defs>
       <circle cx="40" cy="40" r="32" stroke="rgba(0,0,0,0.06)" strokeWidth="6" fill="none" />
@@ -77,11 +78,9 @@ function CellRing() {
           repeatCount="indefinite"
         />
       </circle>
-      <circle cx="40" cy="40" r="9" fill="#5c2a8c" opacity="0.7" />
-      <circle cx="28" cy="32" r="2.5" fill="#f1c40f" />
-      <circle cx="52" cy="30" r="2" fill="#e67e22" />
-      <circle cx="52" cy="50" r="2.4" fill="#1e88e5" />
-      <circle cx="28" cy="52" r="2.2" fill="#c0392b" />
+      <rect x="31" y="34" width="18" height="18" rx="2" fill="#5f4a3d" opacity="0.75" />
+      <path d="M29 35l11-8 11 8" fill="#b85f4d" />
+      <circle cx="40" cy="42" r="3" fill="#f0d58a" />
     </svg>
   );
 }

@@ -1,22 +1,22 @@
 :root {
-  /* 主色调：温润的米白 + 自然系点缀 */
-  --bg-cream: #f6efe2;
-  --bg-paper: #faf5ea;
-  --bg-card: rgba(255, 252, 244, 0.92);
-  --bg-soft: rgba(255, 252, 244, 0.6);
-  --bg-deep: #efe7d6;
+  /* Qingdao old-town travel palette: paper, sea blue, brick red, pale gold. */
+  --bg-cream: #f4ead8;
+  --bg-paper: #fbf6ea;
+  --bg-card: rgba(255, 250, 239, 0.93);
+  --bg-soft: rgba(255, 250, 239, 0.62);
+  --bg-deep: #eadcc6;
 
-  --ink-900: #2c2a2e;
-  --ink-700: #4a4753;
-  --ink-500: #6f6b78;
-  --ink-300: #aaa5b3;
+  --ink-900: #2e2722;
+  --ink-700: #51463c;
+  --ink-500: #776b5f;
+  --ink-300: #afa69a;
 
-  --accent: #7fb069;
-  --accent-deep: #4f7a47;
-  --plum: #6f3aa3;
-  --rose: #c46b7a;
-  --amber: #c98a3a;
-  --sky: #5b8db8;
+  --accent: #2f7f8f;
+  --accent-deep: #185b68;
+  --plum: #8f3f2f;
+  --rose: #b85f4d;
+  --amber: #d7b46a;
+  --sky: #2f7f8f;
 
   --border-soft: rgba(70, 60, 80, 0.08);
   --border-strong: rgba(70, 60, 80, 0.18);
@@ -57,9 +57,9 @@ body,
 
 body {
   background:
-    radial-gradient(1200px 600px at 80% -10%, rgba(127, 176, 105, 0.16), transparent 60%),
-    radial-gradient(900px 600px at -10% 100%, rgba(196, 107, 122, 0.14), transparent 60%),
-    radial-gradient(900px 700px at 50% 50%, rgba(255, 248, 230, 0.6), transparent 70%),
+    radial-gradient(1200px 600px at 80% -10%, rgba(47, 127, 143, 0.18), transparent 60%),
+    radial-gradient(900px 600px at -10% 100%, rgba(184, 95, 77, 0.16), transparent 60%),
+    radial-gradient(900px 700px at 50% 50%, rgba(215, 180, 106, 0.22), transparent 70%),
     linear-gradient(180deg, var(--bg-cream) 0%, var(--bg-paper) 100%);
   color: var(--ink-700);
   overflow-x: hidden;
