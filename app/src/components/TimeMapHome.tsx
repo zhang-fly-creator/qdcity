@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react';
 import type { CellModel } from '../data/models';
 import { QINGDAO_PEOPLE, type QingdaoPerson } from '../data/qingdaoPeople';
+import { SharedHeader } from './SharedHeader';
 
 interface Props {
   models: CellModel[];
   activeId: string;
   onEnterBuilding: (id: string) => void;
   onEnterPanorama: () => void;
-  onEnterModelMap: () => void;
 }
 
 const AVATAR_GLYPHS: Record<QingdaoPerson['avatarType'], string> = {
@@ -19,7 +19,7 @@ const AVATAR_GLYPHS: Record<QingdaoPerson['avatarType'], string> = {
   artist: '🖋️',
 };
 
-export function TimeMapHome({ models, activeId, onEnterBuilding, onEnterPanorama, onEnterModelMap }: Props) {
+export function TimeMapHome({ models, activeId, onEnterBuilding, onEnterPanorama }: Props) {
   const [selectedPersonId, setSelectedPersonId] = useState('laoshe');
   const [hoveredPersonId, setHoveredPersonId] = useState<string | null>(null);
 
@@ -38,38 +38,22 @@ export function TimeMapHome({ models, activeId, onEnterBuilding, onEnterPanorama
 
   return (
     <div className="time-map-shell people-map-shell">
-      <header className="time-map-topbar">
-        <div className="time-map-brand">
-          <div className="time-map-logo" aria-hidden="true">
-            <span className="logo-roof" />
-            <span className="logo-wave" />
-          </div>
-          <div>
-            <h1>青岛名人人物地图</h1>
-            <p>在红瓦绿树之间，遇见曾经停留在青岛的文化名人</p>
-            <p className="time-map-intro">
-              青岛不仅有老建筑，也有一批在这里生活、写作、任教、旅居或留下足迹的文化人物。点击人物头像，查看他与青岛的关系，也可以继续进入相关建筑与 3D 展厅。
-            </p>
-          </div>
+      <SharedHeader
+        activeView="peopleMap"
+        onEnterPanorama={onEnterPanorama}
+        onEnterPeopleMap={() => undefined}
+        onEnterGallery={() => onEnterBuilding(activeId)}
+      />
+
+      <section className="page-intro-bar people-intro-bar">
+        <div>
+          <h2 className="page-title">青岛名人人物地图</h2>
+          <p className="page-subtitle">在红瓦绿树之间，遇见曾经停留在青岛的文化名人</p>
+          <p className="page-copy">
+            青岛不仅有老建筑，也有一批在这里生活、写作、任教、旅居或留下足迹的文化人物。点击人物头像，查看他与青岛的关系，也可以继续进入相关建筑与 3D 展厅。
+          </p>
         </div>
-        <div className="time-map-tags" aria-label="项目标签">
-          <button type="button" className="tag-button" onClick={onEnterPanorama}>
-            返回青岛全景模型
-          </button>
-          <span>人物地图</span>
-          <button type="button" className="tag-button" onClick={onEnterModelMap}>
-            建筑模型地图
-          </button>
-          <button
-            type="button"
-            className="tag-button"
-            onClick={() => onEnterBuilding(activeId)}
-          >
-            3D 建筑展厅
-          </button>
-          <span>演示版 v1.0</span>
-        </div>
-      </header>
+      </section>
 
       <main className="people-home-layout">
         <section className="map-card people-map-card">

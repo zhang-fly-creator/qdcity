@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import type { CellModel } from '../data/models';
 import {
-  DEFAULT_RELATED_PEOPLE,
   getHeritageContent,
   type GuideMode,
-  type RelatedPersonContent,
 } from '../data/heritageContent';
 
 interface Props {
@@ -15,13 +13,6 @@ const GUIDE_LABELS: Record<GuideMode, string> = {
   child: '儿童版',
   visitor: '游客版',
   study: '研学版',
-};
-
-const AVATAR_LABELS: Record<RelatedPersonContent['avatarType'], string> = {
-  laoshe: '书',
-  kang: '卷',
-  architect: '尺',
-  ai: '星',
 };
 
 const ENCOUNTER_AVATARS = {
@@ -37,12 +28,27 @@ const ENCOUNTER_AVATARS = {
   seaside: '🌊',
 } as const;
 
+function FocusGuideCard({ model }: { model: CellModel }) {
+  if (model.id !== 'st-michael-cathedral') return null;
+
+  return (
+    <section className="info-card focus-guide-card">
+      <span className="card-eyebrow">楼层拆解导览图</span>
+      <div className="guide-image-card">
+        <img
+          src={`${import.meta.env.BASE_URL}images/guide/st-michael-guide.png`.replace(/\/+/g, '/')}
+          alt="青岛天主教堂楼层拆解导览图"
+          loading="lazy"
+        />
+      </div>
+    </section>
+  );
+}
+
 export function InfoPanel({ model }: Props) {
   const [guideMode, setGuideMode] = useState<GuideMode>('visitor');
   const content = getHeritageContent(model.id);
-  const people = content?.relatedPeople?.length ? content.relatedPeople : DEFAULT_RELATED_PEOPLE;
   const guidePreview = content?.guideScripts[guideMode] ?? '';
-  const story = content?.oneMinuteStory ?? model.description;
   const encounter = content?.encounterCharacter;
 
   return (
@@ -74,6 +80,8 @@ export function InfoPanel({ model }: Props) {
           </div>
         </dl>
       </section>
+
+      <FocusGuideCard model={model} />
 
       <section className="info-card">
         <span className="card-eyebrow">建筑故事</span>
@@ -139,39 +147,6 @@ export function InfoPanel({ model }: Props) {
           </div>
         </div>
       </section>
-
-      <section className="info-card story-card">
-        <span className="card-eyebrow">1 分钟故事</span>
-        <p className="story-preview">{story}</p>
-      </section>
-
-      <section className="info-card related-people-card">
-        <span className="card-eyebrow">相关人物</span>
-        <div className="related-people-list">
-          {people.map((person) => (
-            <div className="related-person" key={person.name}>
-              <span>{AVATAR_LABELS[person.avatarType]}</span>
-              <div>
-                <strong>{person.name}</strong>
-                <em>{person.role}</em>
-                <p>{person.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {content?.storyTags?.length ? (
-        <section className="info-card">
-          <span className="card-eyebrow">关键词</span>
-          <div className="story-tags">
-            {content.storyTags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
       <section className="info-card">
         <span className="card-eyebrow">建筑看点</span>
         <ul className="feature-list">
@@ -187,16 +162,6 @@ export function InfoPanel({ model }: Props) {
         </ul>
       </section>
 
-      <section className="info-card fun-card">
-        <span className="card-eyebrow">历史轶事</span>
-        <p className="fun-text">{model.funFact}</p>
-      </section>
-
-      <section className="info-card occur-card">
-        <span className="card-eyebrow">游览提示</span>
-        <p>{model.whereItOccurs.text}</p>
-        <div className="habitat">{model.whereItOccurs.habitat}</div>
-      </section>
     </aside>
   );
 }

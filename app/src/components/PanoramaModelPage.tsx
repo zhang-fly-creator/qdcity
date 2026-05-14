@@ -11,11 +11,11 @@ import { PanoramaDriveController } from './PanoramaDriveController';
 import { PanoramaMarker } from './PanoramaMarker';
 import { ProgressOverlay } from './ProgressOverlay';
 import { PANORAMA_MARKERS } from '../data/panoramaMarkers';
+import { SharedHeader } from './SharedHeader';
 
 interface Props {
   models: CellModel[];
   onEnterPeopleMap: () => void;
-  onEnterModelMap: () => void;
   onEnterGallery: () => void;
   onEnterBuilding: (id: string) => void;
 }
@@ -27,7 +27,6 @@ const PANORAMA_FILE_SIZE = 6441936;
 export function PanoramaModelPage({
   models,
   onEnterPeopleMap,
-  onEnterModelMap,
   onEnterGallery,
   onEnterBuilding,
 }: Props) {
@@ -81,27 +80,22 @@ export function PanoramaModelPage({
 
   return (
     <div className="panorama-shell">
-      <header className="panorama-topbar">
+      <SharedHeader
+        activeView="panorama"
+        onEnterPanorama={() => undefined}
+        onEnterPeopleMap={onEnterPeopleMap}
+        onEnterGallery={onEnterGallery}
+      />
+
+      <section className="page-intro-bar panorama-intro-bar">
         <div>
-          <h1 className="panorama-title">青岛全景模型</h1>
-          <p className="panorama-subtitle">
-            以 3D 城市模型俯瞰青岛老城空间、道路肌理与重点建筑分布
-          </p>
-          <p className="panorama-home-intro">
+          <h2 className="page-title">青岛全景模型</h2>
+          <p className="page-subtitle">以 3D 城市模型俯瞰青岛老城空间、道路肌理与重点建筑分布</p>
+          <p className="page-copy">
             这里是青岛老建筑时光伴游的城市入口。你可以在全景模型中查看老城空间，悬停建筑标注了解故事，切换到人物地图寻找文化名人，也可以进入单栋建筑 3D 展厅继续探索。
           </p>
         </div>
-        <div className="panorama-actions">
-          <span className="meta-pill">青岛全景模型</span>
-          <button type="button" className="back-map-btn" onClick={onEnterPeopleMap}>
-            人物地图
-          </button>
-          <button type="button" className="back-map-btn" onClick={onEnterModelMap}>
-            建筑模型地图
-          </button>
-          <button type="button" className="back-map-btn" onClick={onEnterGallery}>
-            3D 建筑展厅
-          </button>
+        <div className="page-tools">
           <button
             type="button"
             className="back-map-btn"
@@ -127,7 +121,7 @@ export function PanoramaModelPage({
             复位视角
           </button>
         </div>
-      </header>
+      </section>
 
       <main className="panorama-layout">
         <section className="panorama-stage">
