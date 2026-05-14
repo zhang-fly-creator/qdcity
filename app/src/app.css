@@ -116,6 +116,13 @@ body {
   min-height: 0;
 }
 
+.stage-stack {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 198px;
+  gap: 12px;
+}
+
 .sidebar,
 .info-panel {
   overflow-y: auto;
@@ -527,6 +534,311 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+.archive-gallery-card {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 22px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.archive-gallery-head {
+  min-height: 40px;
+  padding: 10px 16px 8px;
+  border-bottom: 1px dashed rgba(95, 74, 61, 0.12);
+  display: flex;
+  align-items: center;
+}
+
+.archive-gallery-head h3 {
+  font-size: 15px;
+  color: var(--ink-900);
+  font-family: var(--font-serif);
+  color: var(--ink-500);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.archive-gallery-row {
+  min-height: 0;
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 14px 16px 16px;
+}
+
+.archive-card {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 18px;
+  border: 1px solid rgba(95, 74, 61, 0.08);
+  background: rgba(255, 250, 239, 0.72);
+  text-align: left;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.archive-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(184, 95, 77, 0.22);
+  box-shadow: 0 18px 26px -24px rgba(70, 60, 80, 0.28);
+}
+
+.archive-media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.archive-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.archive-placeholder {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 14px;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(246, 231, 205, 0.98), rgba(233, 219, 193, 0.94)),
+    repeating-linear-gradient(90deg, rgba(95, 74, 61, 0.04) 0 1px, transparent 1px 8px);
+  border: 1px solid rgba(95, 74, 61, 0.12);
+}
+
+.archive-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(95, 74, 61, 0.16);
+  border-radius: 10px;
+}
+
+.archive-type-tag {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(184, 95, 77, 0.14);
+  color: var(--plum);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.archive-placeholder strong,
+.archive-placeholder em,
+.archive-placeholder small {
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.archive-placeholder strong {
+  color: var(--ink-900);
+  font-size: 14px;
+  font-family: var(--font-serif);
+}
+
+.archive-placeholder em {
+  margin-top: 4px;
+  color: var(--ink-500);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.archive-placeholder small {
+  margin-top: 4px;
+  color: rgba(95, 74, 61, 0.66);
+  font-size: 9px;
+}
+
+.archive-glyph {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  color: rgba(95, 74, 61, 0.34);
+  font-size: 28px;
+}
+
+.archive-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.archive-period {
+  color: var(--accent-deep);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.archive-copy strong {
+  color: var(--ink-900);
+  font-size: 12px;
+}
+
+.archive-copy p {
+  color: var(--ink-500);
+  font-size: 10px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.archive-copy small {
+  color: var(--plum);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.archive-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  background: rgba(46, 39, 34, 0.56);
+  backdrop-filter: blur(4px);
+}
+
+.archive-modal {
+  width: min(760px, calc(100vw - 40px));
+  background: rgba(255, 250, 239, 0.98);
+  border-radius: 24px;
+  border: 1px solid rgba(95, 74, 61, 0.12);
+  box-shadow: var(--shadow-card);
+  padding: 18px;
+  position: relative;
+}
+
+.archive-modal-close {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  border: 1px solid rgba(95, 74, 61, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 250, 239, 0.88);
+  color: var(--ink-700);
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.archive-modal-media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.archive-modal-copy {
+  margin-top: 14px;
+}
+
+.archive-modal-copy .archive-period,
+.archive-modal-copy strong,
+.archive-modal-copy p {
+  display: block;
+}
+
+.archive-modal-copy strong {
+  margin-top: 4px;
+  color: var(--ink-900);
+  font-size: 18px;
+  font-family: var(--font-serif);
+}
+
+.archive-modal-copy p {
+  margin-top: 8px;
+  color: var(--ink-700);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.timeline-card {
+  position: relative;
+}
+
+.timeline-scroll {
+  position: relative;
+  min-height: 0;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 12px 16px 14px;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  top: 58px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(215, 180, 106, 0.82), rgba(184, 95, 77, 0.46));
+}
+
+.timeline-item {
+  position: relative;
+  flex: 0 0 208px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.timeline-node {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--rose);
+  border: 3px solid rgba(255, 250, 239, 0.96);
+  box-shadow: 0 0 0 3px rgba(240, 213, 138, 0.24);
+  z-index: 2;
+}
+
+.timeline-item.today .timeline-node {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(47, 127, 143, 0.22);
+}
+
+.timeline-card-shell {
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 16px;
+  border: 1px solid rgba(95, 74, 61, 0.08);
+  background: rgba(255, 250, 239, 0.76);
+  text-align: left;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.timeline-item:hover .timeline-card-shell {
+  transform: translateY(-2px);
+  border-color: rgba(184, 95, 77, 0.22);
+  box-shadow: 0 18px 26px -24px rgba(70, 60, 80, 0.28);
 }
 
 .viewer canvas {

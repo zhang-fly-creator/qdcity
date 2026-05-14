@@ -3,6 +3,7 @@ import { DEFAULT_MODEL_ID, MODELS } from './data/models';
 import { Sidebar } from './components/Sidebar';
 import { ModelViewer } from './components/ModelViewer';
 import { InfoPanel } from './components/InfoPanel';
+import { ArchiveTimeline } from './components/ArchiveTimeline';
 import { TimeMapHome } from './components/TimeMapHome';
 import { PanoramaModelPage } from './components/PanoramaModelPage';
 import { BuildingModelMapPage } from './components/BuildingModelMapPage';
@@ -180,20 +181,24 @@ function App() {
       <main className="layout">
         <Sidebar models={MODELS} activeId={activeId} onSelect={setActiveId} />
 
-        <section
-          className="stage"
-          style={{ '--accent': activeModel.accent } as React.CSSProperties}
-        >
-          <div className="gallery-switcher" aria-label="切换建筑">
-            <button type="button" onClick={() => moveBuilding(-1)}>
-              上一栋
-            </button>
-            <span>{MODELS.findIndex((m) => m.id === activeModel.id) + 1} / {MODELS.length}</span>
-            <button type="button" onClick={() => moveBuilding(1)}>
-              下一栋
-            </button>
-          </div>
-          <ModelViewer key={activeModel.id} model={activeModel} />
+        <section className="stage-stack">
+          <section
+            className="stage"
+            style={{ '--accent': activeModel.accent } as React.CSSProperties}
+          >
+            <div className="gallery-switcher" aria-label="切换建筑">
+              <button type="button" onClick={() => moveBuilding(-1)}>
+                上一栋
+              </button>
+              <span>{MODELS.findIndex((m) => m.id === activeModel.id) + 1} / {MODELS.length}</span>
+              <button type="button" onClick={() => moveBuilding(1)}>
+                下一栋
+              </button>
+            </div>
+            <ModelViewer key={activeModel.id} model={activeModel} />
+          </section>
+
+          <ArchiveTimeline model={activeModel} />
         </section>
 
         <InfoPanel model={activeModel} />

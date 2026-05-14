@@ -20,6 +20,16 @@ export interface BuildingHeritageContent {
   miniProgramPath: string;
   qrImageUrl: string;
   checkinTasks: string[];
+  archiveImages: Array<{
+    id: string;
+    year: number;
+    periodLabel: string;
+    title: string;
+    caption: string;
+    imageUrl: string;
+    type: 'building' | 'street' | 'person' | 'today' | 'archive';
+    imageStatus?: 'placeholder' | 'ready';
+  }>;
   encounterCharacter: {
     name: string;
     role: string;
@@ -93,6 +103,29 @@ export const DEFAULT_RELATED_PEOPLE: RelatedPersonContent[] = [
   },
 ];
 
+function createArchiveImages(
+  baseId: string,
+  entries: Array<{
+    suffix: string;
+    year: number;
+    periodLabel: string;
+    title: string;
+    caption: string;
+    type: 'building' | 'street' | 'person' | 'today' | 'archive';
+  }>
+) {
+  return entries.map((entry) => ({
+    id: `${baseId}-${entry.suffix}`,
+    year: entry.year,
+    periodLabel: entry.periodLabel,
+    title: entry.title,
+    caption: entry.caption,
+    imageUrl: `images/archive/${baseId}-${entry.suffix}.jpg`,
+    type: entry.type,
+    imageStatus: 'placeholder' as const,
+  }));
+}
+
 export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
   'governor-residence': {
     buildingId: 'governor-residence',
@@ -113,6 +146,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=governor-house',
     qrImageUrl: 'images/qrcodes/governor-house-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('governor-house', [
+      { suffix: 'early', year: 1900, periodLabel: '1900年代初', title: '早期建筑影像', caption: '用于展示建筑早期风貌与最初的城市环境。', type: 'building' },
+      { suffix: 'street', year: 1930, periodLabel: '1920-1930年代', title: '老城街景', caption: '从周边街区观察建筑与道路、坡地和城市空间的关系。', type: 'street' },
+      { suffix: 'archive', year: 1950, periodLabel: '城市记忆', title: '城市记忆', caption: '记录建筑在青岛近代城市叙事中的位置与文化气质。', type: 'archive' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '建筑保存观察', caption: '用于观察这栋建筑在城市变迁中的保存状态。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日外观', caption: '用于和历史影像对照观察建筑的当下状态。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '老城建筑师',
       role: '建筑观察向导',
@@ -140,6 +180,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=governor-office',
     qrImageUrl: 'images/qrcodes/governor-office-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('governor-office', [
+      { suffix: 'early', year: 1900, periodLabel: '1900年代初', title: '早期建筑影像', caption: '用于观察行政建筑的早期立面与公共尺度。', type: 'building' },
+      { suffix: 'street', year: 1930, periodLabel: '1920-1930年代', title: '老城街景', caption: '从道路和街区关系理解城市治理空间。', type: 'street' },
+      { suffix: 'archive', year: 1950, periodLabel: '城市记忆', title: '城市档案', caption: '作为青岛老城行政空间的重要线索。', type: 'archive' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '城市变迁中的建筑', caption: '用于观察这栋建筑在城市更新中的保存状态。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日外观', caption: '便于和历史影像一起观察当代展示状态。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '城市规划官',
       role: '老城秩序讲述人',
@@ -166,6 +213,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=jiangsu-church',
     qrImageUrl: 'images/qrcodes/jiangsu-church-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('jiangsu-church', [
+      { suffix: 'early', year: 1910, periodLabel: '1910年代', title: '早期教堂影像', caption: '用于展示钟楼与红瓦屋顶的历史风貌。', type: 'building' },
+      { suffix: 'street', year: 1930, periodLabel: '1920-1930年代', title: '坡路街景', caption: '从街巷关系里理解宗教建筑的方向感。', type: 'street' },
+      { suffix: 'person', year: 1950, periodLabel: '人物记忆', title: '人物记忆', caption: '适合连接老城漫游、钟楼观察和文化记忆。', type: 'person' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '街区变化', caption: '用于观察教堂与周边街区关系在城市变迁中的延续。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日对比', caption: '对照今天的街口视角和建筑识别度。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '钟楼守望者',
       role: '老城方向感向导',
@@ -192,6 +246,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=st-michael-cathedral',
     qrImageUrl: 'images/qrcodes/st-michael-cathedral-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('st-michael-cathedral', [
+      { suffix: 'early', year: 1930, periodLabel: '1930年代', title: '双塔老影像', caption: '用于观察双塔地标与老城天际线的关系。', type: 'building' },
+      { suffix: 'street', year: 1940, periodLabel: '老城街区', title: '中山路街景', caption: '从街区视角感受教堂与城市核心的联系。', type: 'street' },
+      { suffix: 'person', year: 1950, periodLabel: '城市记忆', title: '城市影像记忆', caption: '适合连接拍照、取景和城市地标叙事。', type: 'person' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '建筑保存观察', caption: '用于观察教堂在城市变迁中的保留与展示。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日对比', caption: '和历史图一起观察教堂在当代城市中的存在感。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '老城摄影师',
       role: '城市取景向导',
@@ -218,6 +279,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=qingdao-railway-station',
     qrImageUrl: 'images/qrcodes/qingdao-railway-station-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('qingdao-railway-station', [
+      { suffix: 'early', year: 1900, periodLabel: '1900年代初', title: '老站房影像', caption: '用于展示城市门户型建筑的早期形象。', type: 'building' },
+      { suffix: 'street', year: 1930, periodLabel: '1920-1930年代', title: '站前街景', caption: '从车站到海边的路径是理解青岛第一印象的重要线索。', type: 'street' },
+      { suffix: 'archive', year: 1950, periodLabel: '城市记忆', title: '城市记忆', caption: '记录抵达青岛与进入老城的情绪起点。', type: 'archive' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '城市变迁中的建筑', caption: '用于观察车站在城市更新中的存在方式。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日外观', caption: '和历史影像一起观察车站在今天的门户感。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '百年旅人',
       role: '城市门户讲述人',
@@ -244,6 +312,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=post-museum',
     qrImageUrl: 'images/qrcodes/post-museum-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('post-museum', [
+      { suffix: 'early', year: 1900, periodLabel: '1900年代初', title: '早期建筑影像', caption: '用于展示近代公共服务建筑的外观特征。', type: 'building' },
+      { suffix: 'street', year: 1930, periodLabel: '1920-1930年代', title: '周边街景', caption: '可从街区关系理解邮政通信建筑的公共性。', type: 'street' },
+      { suffix: 'archive', year: 1950, periodLabel: '城市记忆', title: '通信记忆', caption: '从信件、电报和城市连接理解这栋建筑。', type: 'archive' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '城市变迁中的建筑', caption: '用于观察公共建筑在城市更新中的保存状态。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日对比', caption: '便于对照今天的博物馆展示方式与建筑延续。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '邮差先生',
       role: '城市通信讲述人',
@@ -270,6 +345,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=tsingtao-brewery',
     qrImageUrl: 'images/qrcodes/tsingtao-brewery-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('tsingtao-brewery', [
+      { suffix: 'early', year: 1903, periodLabel: '1900年代初', title: '早期厂区影像', caption: '用于展示工业建筑的红砖尺度与生产空间气质。', type: 'building' },
+      { suffix: 'street', year: 1930, periodLabel: '1920-1930年代', title: '厂区周边街景', caption: '从街区和厂区关系理解工业遗产的城市位置。', type: 'street' },
+      { suffix: 'person', year: 1950, periodLabel: '城市记忆', title: '品牌与人物记忆', caption: '连接青岛品牌、工业记忆和市民生活。', type: 'person' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '城市变迁中的建筑', caption: '用于观察厂区在城市发展中的保存与转化。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日对比', caption: '适合对照当代文旅转化后的厂区展示状态。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '老厂长',
       role: '工业记忆讲述人',
@@ -296,6 +378,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=laoshe-house',
     qrImageUrl: 'images/qrcodes/laoshe-house-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('laoshe-house', [
+      { suffix: 'early', year: 1930, periodLabel: '1930年代', title: '早期故居影像', caption: '用于展示故居所在街区的历史气质。', type: 'building' },
+      { suffix: 'street', year: 1940, periodLabel: '老城街区', title: '文学街区', caption: '从大学路、黄县路一带理解文学青岛。', type: 'street' },
+      { suffix: 'person', year: 1950, periodLabel: '人物记忆', title: '人物记忆', caption: '与老舍青岛时期的生活和写作记忆相关。', type: 'person' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '街区变化', caption: '观察文学街区在城市变化中的连续性。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日对比', caption: '观察名人故居在当代城市中的展示方式。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '文学青岛讲述人',
       role: '文学记忆向导',
@@ -322,6 +411,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=kang-youwei-house',
     qrImageUrl: 'images/qrcodes/kang-youwei-house-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('kang-youwei-house', [
+      { suffix: 'early', year: 1930, periodLabel: '1930年代', title: '早期故居影像', caption: '用于展示故居建筑的早期空间气质。', type: 'building' },
+      { suffix: 'street', year: 1940, periodLabel: '老城街区', title: '周边街区', caption: '从福山支路一带理解文化街区和名人故居关系。', type: 'street' },
+      { suffix: 'person', year: 1950, periodLabel: '人物记忆', title: '人物记忆', caption: '与近代思想人物晚年生活和城市文化相关。', type: 'person' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '街区变化', caption: '用于观察名人故居在城市更新中的延续状态。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日对比', caption: '用于观察名人故居在当代城市中的呈现方式。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '近代思想讲述人',
       role: '名人故居向导',
@@ -348,6 +444,13 @@ export const HERITAGE_CONTENT: Record<string, BuildingHeritageContent> = {
     miniProgramPath: 'pages/building/detail?id=huashi-building',
     qrImageUrl: 'images/qrcodes/huashi-building-checkin.png',
     checkinTasks: ['到达现场，激活人物偶遇', '听 1 分钟建筑故事', '完成一个建筑观察问题', '拍照打卡，领取数字徽章'],
+    archiveImages: createArchiveImages('huashi-building', [
+      { suffix: 'early', year: 1930, periodLabel: '1930年代', title: '海滨别墅影像', caption: '用于展示海滨别墅与建筑风格的早期状态。', type: 'building' },
+      { suffix: 'street', year: 1940, periodLabel: '老城街区', title: '周边街景', caption: '从道路、树木和海岸方向理解八大关风貌。', type: 'street' },
+      { suffix: 'archive', year: 1950, periodLabel: '城市记忆', title: '城市记忆', caption: '适合连接海风、别墅和度假城市叙事。', type: 'archive' },
+      { suffix: 'change', year: 1980, periodLabel: '1980年代', title: '城市变迁中的建筑', caption: '用于观察八大关风貌在城市变迁中的保留状态。', type: 'archive' },
+      { suffix: 'today', year: 2025, periodLabel: '今日', title: '今日对比', caption: '用于观察花石楼与周边风貌在今天的整体感。', type: 'today' },
+    ]),
     encounterCharacter: {
       name: '八大关漫游家',
       role: '海滨别墅向导',
